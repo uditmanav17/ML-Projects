@@ -1,3 +1,3 @@
-holidays#==0.48
+holidays
 xgboost==2.1.0
 scikit-learn==1.3.0
