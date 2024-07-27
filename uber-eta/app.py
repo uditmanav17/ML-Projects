@@ -1,8 +1,10 @@
 import datetime
 import re
 from math import asin, atan2, cos, degrees, radians, sin, sqrt
+from pathlib import Path
 
-import holidays  # importing the holidays library
+# importing the holidays library
+import holidays
 import pandas as pd
 import streamlit as st
 from src import infer, preprocess
@@ -18,6 +20,9 @@ direction_mapping = {
     "West": 270,
     "North-West": 315,
 }
+
+CUR_DIR_PATH = Path(__file__).parent.resolve()
+# print(f"----------{CUR_DIR_PATH}")
 
 
 def haversine(lon1, lat1, lon2, lat2):
@@ -159,7 +164,8 @@ def get_user_input(df):
     # using train.csv for delivery_person_ID as we dropped in preprocess.py as it is not required for model predictions
     # here, we require for showing in frontend app
 
-    raw_data = pd.read_csv("./data/train.csv")
+    data_path = CUR_DIR_PATH / "data/train.csv"
+    raw_data = pd.read_csv(data_path)
     delivery_person_ids = raw_data["Delivery_person_ID"].unique()
     restaurant_locations = {}
     for delivery_person_id in delivery_person_ids:
@@ -329,7 +335,9 @@ if __name__ == "__main__":
     )
 
     # Read in training data
-    df = pd.read_csv("./data/train.csv")
+    data_path = CUR_DIR_PATH / "data/train.csv"
+    df = pd.read_csv(data_path)
+
     dataprocess = preprocess.DataProcessing()
     dataprocess.cleaning_steps(df)
 

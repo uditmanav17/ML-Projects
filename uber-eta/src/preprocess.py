@@ -35,7 +35,7 @@ class DataProcessing:
             },
             inplace=True,
         )
-        print("->" * 10, df.columns)
+        # print("->" * 10, df.columns)
 
     def extract_feature_value(self, df):
         """
