@@ -41,7 +41,10 @@ def haversine(lon1, lat1, lon2, lat2):
 
 
 def calculate_delivery_location(
-    restaurant_latitude, restaurant_longitude, distance, direction
+    restaurant_latitude,
+    restaurant_longitude,
+    distance,
+    direction,
 ):
     """
     Calculate the delivery location's latitude and longitude based on the distance
@@ -131,6 +134,16 @@ def validate_location_inputs(
 
 
 def get_user_input(df):
+    """
+    Gets user input for order-related, location-related, and delivery person-related information,
+    validates the inputs, and creates a DataFrame with the user input for model predictions.
+
+    Args:
+    - df: DataFrame containing relevant data for user input.
+
+    Returns:
+    DataFrame with user input for model predictions or None if the inputs are invalid.
+    """
     # getting input for order
     st.sidebar.write("**Order Related Information**")
     date = st.sidebar.date_input("what is the Order Date?")
@@ -351,7 +364,7 @@ if __name__ == "__main__":
     st.write("""
                 The food delivery time prediction model ensures prompt and accurate deliveries in the food industry.
 
-                It leverages advanced data cleaning techniques, feature engineering, and considers order details, location, delivery person information, and weather conditions to provide accurate delivery time estimates.
+                It leverages advanced data cleaning techniques, feature engineering, and considers order details, location, delivery person information, and weather conditions to provide delivery time estimates.
              """)
 
     # create the sidebar

@@ -12,6 +12,16 @@ class DataProcessing:
         self.R = 6371
 
     def update_column_name(self, df):
+        """
+        Renames specific columns in the given DataFrame df to more descriptive names.
+
+        Args:
+        - df: DataFrame with columns to be renamed.
+
+        Returns:
+        None
+        """
+
         df.rename(
             columns={
                 "Delivery_person_Age": "driver_age",
@@ -39,10 +49,16 @@ class DataProcessing:
 
     def extract_feature_value(self, df):
         """
-        Extracts feature values from the given DataFrame df:
-        - Extracts the weather condition value from the 'Weather_conditions' column
-        - Creates a new 'City_code' column from the 'Delivery_person_ID' column
+        Extracts specific feature values from the given DataFrame df:
+        - Extracts the weather condition value from the 'weather' column
+        - Creates a new 'city_code' column from the 'Delivery_person_ID' column
         - Strips leading/trailing whitespace from object columns
+
+        Args:
+        - df: DataFrame to extract feature values from.
+
+        Returns:
+        None
         """
         # print(f"{df.weather=}")
         df["weather"] = df["weather"].str.lower().str.split(expand=True)[1]
@@ -57,10 +73,6 @@ class DataProcessing:
             df[column] = df[column].str.strip()
 
     def extract_label_value(self, df):
-        """
-        Extracts the label value (Time_taken(min)) from the 'Time_taken(min)' column in the given DataFrame df.
-        """
-
         df["time_taken_min"] = df["time_taken_min"].apply(
             lambda x: int(x.split(" ")[1].strip())
         )
@@ -70,11 +82,17 @@ class DataProcessing:
 
     def update_datatype(self, df):
         """
-        Updates the data types of the following columns in the given DataFrame df:
-        - 'Delivery_person_Age' to float64
-        - 'Delivery_person_Ratings' to float64
-        - 'Multiple_deliveries' to float64
-        - 'Order_Date' to datetime with format "%d-%m-%Y"
+        Updates the data types of specific columns in the given DataFrame df:
+        - 'driver_age' to float64
+        - 'driver_rating' to float64
+        - 'multiple_deliveries' to float64
+        - 'order_date' to datetime with format "%d-%m-%Y"
+
+        Args:
+        - df: DataFrame to update data types.
+
+        Returns:
+        None
         """
         df["driver_age"] = df["driver_age"].astype("float64")
         df["driver_rating"] = df["driver_rating"].astype("float64")
@@ -82,22 +100,24 @@ class DataProcessing:
         df["order_date"] = pd.to_datetime(df["order_date"], format="%d-%m-%Y")
 
     def convert_nan(self, df):
-        """
-        Converts the string 'NaN' to a float NaN value in the given DataFrame df.
-        """
-
         df.replace("NaN", float(np.nan), regex=True, inplace=True)
 
     def handle_null_values(self, df):
         """
         Handles null values in the given DataFrame df:
-        - Fills null values in 'Delivery_person_Age' with a random value from the column
-        - Fills null values in 'Weather_conditions' with a random value from the column
-        - Fills null values in 'Delivery_person_Ratings' with the column median
-        - Fills null values in 'Time_Orderd' with the corresponding 'Time_Order_picked' value
-        - Fills null values in 'Road_traffic_density', 'Multiple_deliveries', 'Festival', and 'City_type' with the most frequent value
-        """
+        - Fills null values in 'driver_age' with a random value from the column
+        - Fills null values in 'weather' with a random value from the column
+        - Fills null values in 'driver_rating' with the column median
+        - Fills null values in 'time_ordered' with the corresponding 'time_order_picked' value
+        - Fills null values in 'traffic_density', 'multiple_deliveries', 'festival', and 'city' with the most frequent value
 
+        Args:
+        - df: DataFrame to handle null values.
+
+        Returns:
+        None
+
+        """
         df["driver_age"].fillna(np.random.choice(df["driver_age"]), inplace=True)
         df["weather"].fillna(np.random.choice(df["weather"]), inplace=True)
         df["driver_rating"].fillna(df["driver_rating"].median(), inplace=True)
@@ -116,12 +136,18 @@ class DataProcessing:
 
     def extract_date_features(self, df):
         """
-        Extracts date features from the 'Order_Date' column in the given DataFrame df:
+        Extracts date features from the 'order_date' column in the given DataFrame df:
         - 'weekend' (boolean): True if the day of the week is Saturday or Sunday
         - 'month_intervals' (categorical): 'start_month' if day <= 10, 'middle_month' if day <= 20, 'end_month' otherwise
         - 'year_quarter' (categorical): The quarter of the year (1, 2, 3, or 4)
-        """
 
+        Args:
+        - df: DataFrame to extract date features from.
+
+        Returns:
+        None
+
+        """
         df["weekend"] = df["order_date"].dt.day_of_week > 4
         df["month_intervals"] = df["order_date"].apply(
             lambda x: "start_month"
@@ -133,11 +159,18 @@ class DataProcessing:
     def calculate_time_diff(self, df):
         """
         Calculates the time difference between order placement and order pickup in the given DataFrame df:
-        - Converts 'Time_Ordered' and 'Time_Order_picked' to timedelta
-        - Calculates 'Time_Order_picked_formatted' and 'Time_Ordered_formatted' based on 'Order_Date'
-        - Calculates 'order_prepare_time' as the difference between 'Time_Order_picked_formatted' and 'Time_Ordered_formatted' in minutes
+        - Converts 'time_ordered' and 'time_order_picked' to timedelta
+        - Calculates 'time_order_picked_formatted' and 'time_ordered_formatted' based on 'order_date'
+        - Calculates 'order_prepare_time' as the difference between 'time_order_picked_formatted' and 'time_ordered_formatted' in minutes
         - Fills null values in 'order_prepare_time' with the column median
-        - Drops 'Time_Ordered', 'Time_Order_picked', 'Time_Ordered_formatted', 'Time_Order_picked_formatted', and 'Order_Date' columns
+        - Drops 'time_ordered', 'time_order_picked', 'time_ordered_formatted', 'time_order_picked_formatted', and 'order_date' columns
+
+        Args:
+        - df: DataFrame to calculate time difference.
+
+        Returns:
+        None
+
         """
         df["time_ordered"] = pd.to_timedelta(df["time_ordered"])
         df["time_order_picked"] = pd.to_timedelta(df["time_order_picked"])
@@ -167,17 +200,22 @@ class DataProcessing:
         )
 
     def deg_to_rad(self, degrees):
-        """
-        Converts degrees to radians.
-        """
-
         return degrees * (np.pi / 180)
 
     def distcalculate(self, lat1, lon1, lat2, lon2):
         """
         Calculates the distance between two latitude-longitude coordinates using the Haversine formula.
-        """
 
+        Args:
+        - lat1: Latitude of the first point.
+        - lon1: Longitude of the first point.
+        - lat2: Latitude of the second point.
+        - lon2: Longitude of the second point.
+
+        Returns:
+        Distance between the two coordinates.
+
+        """
         lat1, lon1, lat2, lon2 = map(float, [lat1, lon1, lat2, lon2])
         d_lat = self.deg_to_rad(lat2 - lat1)
         d_lon = self.deg_to_rad(lon2 - lon1)
@@ -188,13 +226,6 @@ class DataProcessing:
         return self.R * c
 
     def calculate_distance(self, df):
-        """
-        Calculates the distance between the restaurant and delivery location in the given DataFrame df:
-        - Creates a new 'distance' column
-        - Calculates the distance using the 'Restaurant_latitude', 'Restaurant_longitude', 'Delivery_location_latitude', and 'Delivery_location_longitude' columns
-        - Converts the 'distance' column to int64
-        """
-
         df["distance"] = np.nan
 
         for i in range(len(df)):
@@ -213,8 +244,14 @@ class DataProcessing:
         - Strips leading/trailing whitespace from object columns
         - Fits and transforms each object column using LabelEncoder
         - Returns a dictionary of LabelEncoder objects for each encoded column
-        """
 
+        Args:
+        - df: DataFrame to perform label encoding on.
+
+        Returns:
+        Dictionary of LabelEncoder objects for each encoded column.
+
+        """
         categorical_columns = df.select_dtypes(include="object").columns
         label_encoders = {}
 
@@ -227,25 +264,12 @@ class DataProcessing:
         return label_encoders
 
     def data_split(self, X, y):
-        """
-        Splits the input features X and target variable y into training and testing sets:
-        - Splits the data with a test size of 0.2 and a random state of 42
-        - Returns X_train, X_test, y_train, y_test
-        """
-
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.2, random_state=42
         )
         return X_train, X_test, y_train, y_test
 
     def standardize(self, X_train, X_test):
-        """
-        Standardizes the training and testing feature sets:
-        - Fits a StandardScaler on X_train
-        - Transforms X_train and X_test using the fitted StandardScaler
-        - Returns X_train, X_test, and the fitted StandardScaler
-        """
-
         scaler = StandardScaler()
         scaler.fit(X_train)
         X_train = scaler.transform(X_train)
@@ -266,6 +290,18 @@ class DataProcessing:
         self.calculate_distance(df)
 
     def evaluate_model(self, y_test, y_pred):
+        """
+        Evaluates the model performance using Mean Absolute Error (MAE),
+        Mean Squared Error (MSE), Root Mean Squared Error (RMSE), and R-squared (R2) Score.
+
+        Args:
+        - y_test: True target values.
+        - y_pred: Predicted target values.
+
+        Returns:
+        None
+
+        """
         mae = mean_absolute_error(y_test, y_pred)
         mse = mean_squared_error(y_test, y_pred)
         rmse = np.sqrt(mse)
