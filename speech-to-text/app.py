@@ -90,10 +90,10 @@ def main():
         format_func=lambda x: language_options.get(x),
     )
 
-    if cuda_available := torch.cuda.is_available():
-        st.info("GPU available 🔥 - Transcriptions will be fast!")
-    else:
-        st.warning("GPU NOT available 🚨 - Transcriptions might take some time")
+    # if cuda_available := torch.cuda.is_available():
+    #     st.info("GPU available 🔥 - Transcriptions will be fast!")
+    # else:
+    #     st.warning("GPU NOT available 🚨 - Transcriptions might take some time")
 
     # load model
     model = load_model()
