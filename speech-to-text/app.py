@@ -21,7 +21,7 @@ st.set_page_config(
 def load_model():
     # model sizes
     # https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages
-    return whisper.load_model("tiny")
+    return whisper.load_model("base")
 
 
 def duration_check(info, *, incomplete):
@@ -129,7 +129,7 @@ def main():
             )
         else:
             # start transcription
-            # st.audio("./audio.m4a", format="audio/mpeg")
+            st.audio("./audio.m4a", format="audio/mpeg")
             with st.spinner("Transcribing..."):
                 result = model.transcribe(
                     str(audio_path),
