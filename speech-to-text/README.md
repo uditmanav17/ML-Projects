@@ -44,3 +44,4 @@ You can deploy it on your own easily and (possibly) free of charge on cloud. Scr
 
 ## Future work/ Improvements
 - Add download transcription as subtitles `.srt` file.
+- Implement streaming transcription.

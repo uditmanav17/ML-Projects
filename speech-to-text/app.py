@@ -69,8 +69,10 @@ def postprocess_transcription(predictions: dict, include_timestamps: bool):
         startTime = str(0) + str(timedelta(seconds=int(segment["start"]))) + ",000"
         endTime = str(0) + str(timedelta(seconds=int(segment["end"]))) + ",000"
         text = segment["text"]
+        if not text.strip():
+            continue
         segmentId = segment["id"] + 1
-        segment = f"{segmentId}\n{startTime} --> {endTime}\n{text[1:] if text[0] == ' ' else text}\n\n"
+        segment = f"{segmentId}\n{startTime} --> {endTime}\n{text.strip()}\n\n"
 
         result.append(segment)
     return "".join(result)
@@ -80,7 +82,7 @@ def main():
     st.title("Audio|YouTube video Transcription")
 
     st.sidebar.title("Settings")
-    with_timestamps = st.sidebar.selectbox("Include Timestamps", ["Yes", "No"])
+    with_timestamps = st.sidebar.selectbox("Include Timestamps", ["Yes", "No"], index=1)
     language_options = {None: "Auto-detect", "en": "English"}
     language = st.sidebar.selectbox(
         "Select Language",
@@ -135,6 +137,7 @@ def main():
                     language=language,
                 )
 
+            st.success("🎉 Transcription completed successfully! 🎉")
             if transcription := postprocess_transcription(
                 result,
                 with_timestamps == "Yes",
@@ -142,7 +145,6 @@ def main():
                 st.session_state.text = transcription
                 with st.expander("See Transcription"):
                     st.write(st.session_state.text)
-
             audio_path.unlink()
     else:
         st.info("Please add YouTube URL or upload audio for transcription", icon="ℹ️")
