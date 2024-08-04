@@ -1,4 +1,5 @@
 # ruff: noqa: F401
+import contextlib
 from datetime import timedelta
 from pathlib import Path
 
@@ -18,7 +19,9 @@ st.set_page_config(
 
 @st.cache_resource
 def load_model():
-    return whisper.load_model("base")
+    # model sizes
+    # https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages
+    return whisper.load_model("tiny")
 
 
 def duration_check(info, *, incomplete):
@@ -48,6 +51,17 @@ def download_yt_audio(yt_url: str):
 
 
 def postprocess_transcription(predictions: dict, include_timestamps: bool):
+    """
+    Postprocesses the transcription predictions to include timestamps if specified.
+
+    Args:
+        predictions (dict): The transcription predictions.
+        include_timestamps (bool): Flag to indicate whether to include timestamps.
+
+    Returns:
+        str: The postprocessed transcription with or without timestamps.
+    """
+
     if not include_timestamps:
         return predictions.get("text")
     result = []
@@ -74,18 +88,13 @@ def main():
         format_func=lambda x: language_options.get(x),
     )
 
-    # check GPU
-    cuda_available = torch.cuda.is_available()
-    print(cuda_available)
-    if cuda_available:
+    if cuda_available := torch.cuda.is_available():
         st.info("GPU available 🔥 - Transcriptions will be fast!")
     else:
         st.warning("GPU NOT available 🚨 - Transcriptions might take some time")
 
     # load model
     model = load_model()
-    transcription = None
-
     # YT video link input
     text_input = st.text_input(label="Enter valid Youtube video URL")
 
@@ -98,14 +107,11 @@ def main():
 
     # submit with video link or uploaded audio
     if submit_button and (text_input or audio):
-        st.session_state.text = None
         toast_msg = st.toast("Model is running!", icon="🏃")
         # download audio from YT video url
         if text_input:
-            try:
+            with contextlib.suppress(Exception):
                 download_yt_audio(text_input)
-            except Exception:
-                pass
         elif audio is not None:
             # save uploaded audio
             bytes_data = audio.getvalue()
@@ -128,12 +134,15 @@ def main():
                     word_timestamps=True,
                     language=language,
                 )
-            transcription = postprocess_transcription(result, with_timestamps == "Yes")
-            if transcription or st.session_state.text:
+
+            if transcription := postprocess_transcription(
+                result,
+                with_timestamps == "Yes",
+            ):
                 st.session_state.text = transcription
                 with st.expander("See Transcription"):
                     st.write(st.session_state.text)
-                    # st.code(transcription)
+
             audio_path.unlink()
     else:
         st.info("Please add YouTube URL or upload audio for transcription", icon="ℹ️")
