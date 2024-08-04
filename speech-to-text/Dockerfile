@@ -10,7 +10,7 @@ WORKDIR /app
 COPY requirements.txt ./requirements.txt
 
 # Download dependencies using cache mount and bind mount
-RUN python -m pip install -r requirements.txt
+RUN apt update && apt install ffmpeg -y && python -m pip install -r requirements.txt
 
 EXPOSE 8501
 

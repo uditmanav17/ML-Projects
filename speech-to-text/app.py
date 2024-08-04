@@ -67,8 +67,11 @@ def main():
 
     st.sidebar.title("Settings")
     with_timestamps = st.sidebar.selectbox("Include Timestamps", ["Yes", "No"])
+    language_options = {None: "Auto-detect", "en": "English"}
     language = st.sidebar.selectbox(
-        "Select Language", {"Auto-detect": None, "English": "en"}
+        "Select Language",
+        language_options.keys(),
+        format_func=lambda x: language_options.get(x),
     )
 
     # check GPU
