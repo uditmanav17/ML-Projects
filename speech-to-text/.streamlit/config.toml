@@ -1,13 +1,13 @@
 # https://docs.streamlit.io/develop/api-reference/configuration/config.toml
 
 [server]
-headless = true
-runOnSave = true
-allowRunOnSave = true
-# fastReruns = true
-# fileWatcherType = "auto"
-# fileWatcherType = "watchdog"
-fileWatcherType = "poll"
+# headless = true
+# runOnSave = true
+# allowRunOnSave = true
+# # fastReruns = true
+# # fileWatcherType = "auto"
+# # fileWatcherType = "watchdog"
+# fileWatcherType = "poll"
 
 
 [theme]
