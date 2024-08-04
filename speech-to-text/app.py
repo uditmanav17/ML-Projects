@@ -129,7 +129,7 @@ def main():
             )
         else:
             # start transcription
-            st.audio("./audio.m4a", format="audio/mpeg")
+            # st.audio("./audio.m4a", format="audio/mpeg")
             with st.spinner("Transcribing..."):
                 result = model.transcribe(
                     str(audio_path),
