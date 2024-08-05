@@ -126,7 +126,8 @@ def main():
         if not audio_path.exists():
             st.error(
                 """Audio file generation failed! Please recheck YouTube URL or uploaded file.
-                YT videos only upto 10 mins are supported""",
+                YT videos only upto 10 mins are supported.
+                YouTube may have rate limited due to large number of requests.""",
                 icon="🚨",
             )
         else:
@@ -151,6 +152,10 @@ def main():
             audio_path.unlink()
     else:
         st.info("Please add YouTube URL or upload audio for transcription", icon="ℹ️")
+
+    if st.button("Remove previous results."):
+        audio_path = Path("./audio.m4a")
+        audio_path.unlink(missing_ok=True)
 
     # download and copy transcription
     # col1, col2 = st.columns([1, 1])
