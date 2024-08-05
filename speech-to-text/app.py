@@ -109,6 +109,9 @@ def main():
 
     # submit with video link or uploaded audio
     if submit_button and (text_input or audio):
+        # if previous audio exists, remove it
+        audio_path = Path("./audio.m4a")
+        audio_path.unlink(missing_ok=True)
         toast_msg = st.toast("Model is running!", icon="🏃")
         # download audio from YT video url
         if text_input:
@@ -120,7 +123,6 @@ def main():
             with open("./audio.m4a", "wb") as f:
                 f.write(bytes_data)
 
-        audio_path = Path("./audio.m4a")
         if not audio_path.exists():
             st.error(
                 """Audio file generation failed! Please recheck YouTube URL or uploaded file.
