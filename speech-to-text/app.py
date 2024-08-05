@@ -38,7 +38,9 @@ def download_yt_audio(yt_url: str):
         "match_filter": duration_check,
         "format": "m4a/bestaudio/best",
         "outtmpl": {"default": "audio.%(ext)s"},
-        "cookiesfrombrowser": ("edge", None, None, None),
+        # "cookiesfrombrowser": (None, None, None, None),
+        "cachedir": False,
+        "verbose": True,
         "postprocessors": [
             {  # Extract audio using ffmpeg
                 "key": "FFmpegExtractAudio",
@@ -134,23 +136,26 @@ def main():
         else:
             # start transcription
             st.audio("./audio.m4a", format="audio/mpeg")
-            with st.spinner("Transcribing..."):
-                result = model.transcribe(
-                    str(audio_path),
-                    verbose=True,
-                    word_timestamps=True,
-                    language=language,
-                )
+            try:
+                with st.spinner("Transcribing..."):
+                    result = model.transcribe(
+                        str(audio_path),
+                        verbose=True,
+                        word_timestamps=True,
+                        language=language,
+                    )
 
-            st.success("🎉 Transcription completed successfully! 🎉")
-            if transcription := postprocess_transcription(
-                result,
-                with_timestamps == "Yes",
-            ):
-                st.session_state.text = transcription
-                with st.expander("See Transcription"):
-                    st.write(st.session_state.text)
-            audio_path.unlink()
+                st.success("🎉 Transcription completed successfully! 🎉")
+                if transcription := postprocess_transcription(
+                    result,
+                    with_timestamps == "Yes",
+                ):
+                    st.session_state.text = transcription
+                    with st.expander("See Transcription"):
+                        st.write(st.session_state.text)
+                audio_path.unlink()
+            except Exception:
+                st.error("Please refresh App")
     else:
         st.info("Please add YouTube URL or upload audio for transcription", icon="ℹ️")
 
