@@ -153,9 +153,11 @@ def main():
     else:
         st.info("Please add YouTube URL or upload audio for transcription", icon="ℹ️")
 
-    if st.button("Remove previous results."):
+    if st.button("Refresh App"):
         audio_path = Path("./audio.m4a")
         audio_path.unlink(missing_ok=True)
+        # re-load model
+        model = load_model()
 
     # download and copy transcription
     # col1, col2 = st.columns([1, 1])
