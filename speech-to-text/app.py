@@ -38,6 +38,7 @@ def download_yt_audio(yt_url: str):
         "match_filter": duration_check,
         "format": "m4a/bestaudio/best",
         "outtmpl": {"default": "audio.%(ext)s"},
+        "cookiesfrombrowser": ("edge", None, None, None),
         "postprocessors": [
             {  # Extract audio using ffmpeg
                 "key": "FFmpegExtractAudio",
