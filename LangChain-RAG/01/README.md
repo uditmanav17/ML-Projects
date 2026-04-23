@@ -32,3 +32,17 @@
 - **Building Multi User Chatbot**
     - Managing conversation history using a database table
 
+### **Part 2: Moving to Production with FastAPI**
+
+- **Integrating Colab Code with FastAPI**
+    - Setting up FastAPI for production
+    - Modularizing code into different files for maintainability
+    - Implemeting chatbot endpoint to talk to your data
+- **Creating API Endpoints**
+    - Building endpoints for file upload, list, and deletion
+    - Testing and validating endpoints
+
+- **Building a Streamlit Interface**
+    - Creating a user-friendly interface with Streamlit
+    - Integrating the RAG chatbot API with the Streamlit app
+    - File management features (upload, list, delete)
