@@ -28,7 +28,7 @@ You can deploy it on your own easily and (possibly) free of charge on cloud. Scr
     git switch whisper && cd ./speech-to-text
     docker compose --profile app up
     ```
-    - `--profile app` will start on `localhost:8501` and `localhost:8501` ports.
+    - `--profile app` will start on `localhost:8501` port.
 
 - Docker Playground Cloud Deployment
     - Navigate to [docker playground](https://labs.play-with-docker.com/).
