@@ -21,7 +21,7 @@ You can deploy it on your own easily and (possibly) free of charge on cloud. Scr
 ## Deployment
 - Local deployment
     - Install Docker. Instructions available [here](https://docs.docker.com/engine/install/). Make sure docker is up and running before proceeding.
-    - Install Git. Instruction [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+    - Install Git. Instructions [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
     - Clone repo and run compose
     ```
     git clone https://github.com/uditmanav17/ML-Projects.git && cd ./ML-Projects
